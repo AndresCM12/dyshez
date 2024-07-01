@@ -1,0 +1,56 @@
+name: dyshez_test
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.6 <4.0.0'
+
+dependencies:
+  auto_route: ^7.8.3
+  equatable: ^2.0.5
+  google_fonts: ^6.1.0
+  flutter_bloc: ^8.1.6
+  flutter_native_splash: ^2.3.1
+  flutter_form_builder: ^9.1.1
+  supabase_flutter: ^2.0.0
+  flutter:
+    sdk: flutter
+  get_it: ^7.6.7
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  auto_route_generator: ^7.2.0
+  build_runner: ">=2.3.0 <4.0.0"
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/logo.png"
+    background_color: "#FFFFFF"
+    theme_color: "#FFFFFF"
+  windows:
+    generate: true
+    image_path: "assets/logo.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/logo.png"
+
+flutter_native_splash:
+  color: "#E3026F"
+  android: true
+  ios: true
+  image: assets/white_logo.png
