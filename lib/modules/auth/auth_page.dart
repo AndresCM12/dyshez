@@ -12,6 +12,8 @@ class AuthPage extends StatelessWidget {
       routes: const [
         LogInView(),
         SignUpView(),
+        RecoverPasswordView(),
+        ChangePasswordView()
       ],
       builder: (context, child) => Scaffold(body: child),
     );

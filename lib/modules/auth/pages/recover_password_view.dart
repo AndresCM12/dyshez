@@ -1,18 +1,39 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dyshez_test/config/app_router.gr.dart';
+import 'package:dyshez_test/data/repositories/auth_repository.dart';
 import 'package:dyshez_test/modules/auth/cubits/auth/auth_cubit.dart';
 import 'package:dyshez_test/widgets/async_button_widget.dart';
-import 'package:dyshez_test/widgets/password_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final logInUpFormKey = GlobalKey<FormBuilderState>();
+final recoverPasswordFormKey = GlobalKey<FormBuilderState>();
 
 @RoutePage()
-class LogInView extends StatelessWidget {
-  const LogInView({Key? key}) : super(key: key);
+class RecoverPasswordView extends StatefulWidget {
+  const RecoverPasswordView({Key? key}) : super(key: key);
+
+  @override
+  State<RecoverPasswordView> createState() => _RecoverPasswordViewState();
+}
+
+class _RecoverPasswordViewState extends State<RecoverPasswordView> {
+  final locator = GetIt.instance;
+
+  @override
+  void initState() {
+    context.read<AuthCubit>().initRestorePasswordListener(context);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    //We cant call the cancelRestorePasswordListener method from the AuthCubit because the context is already disposed
+    locator<AuthRepository>().cancelAuthStateChangeListener();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +41,7 @@ class LogInView extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         body: FormBuilder(
-          key: logInUpFormKey,
+          key: recoverPasswordFormKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -35,7 +56,7 @@ class LogInView extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  "Iniciar Sesión",
+                  "Recuperar Cuenta",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     fontSize: 32,
@@ -44,12 +65,9 @@ class LogInView extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 FormBuilderTextField(
-                  name: 'email',
+                  name: 'email_recover',
                   validator: (value) =>
                       value == null || value.isEmpty ? 'Campo requerido' : null,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: const InputDecoration(
                     labelText: 'Correo Electrónico',
                     icon: Icon(Icons.email_outlined),
@@ -57,26 +75,19 @@ class LogInView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const PasswordFieldWidget(
-                  keyName: "password",
-                  name: "password",
-                  label: "Contraseña",
-                  hintText: "",
-                ),
-                const SizedBox(height: 16),
                 AsyncButtonWidget(
-                  buttonText: "Iniciar Sesión",
+                  buttonText: "Restablecer",
                   onPressed: () async {
-                    if (logInUpFormKey.currentState!.saveAndValidate()) {
-                      final values = logInUpFormKey.currentState!.value;
-                      await context.read<AuthCubit>().logInWithEmailAndPassword(
-                            email: values['email'].toString(),
-                            password: values['password'].toString(),
+                    if (recoverPasswordFormKey.currentState!
+                        .saveAndValidate()) {
+                      final values = recoverPasswordFormKey.currentState!.value;
+                      await context.read<AuthCubit>().restoreAccount(
+                            email: values['email_recover'].toString(),
                             context: context,
                           );
                     }
                   },
-                  color: null,
+                  color: Colors.black,
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -92,7 +103,7 @@ class LogInView extends StatelessWidget {
                       onTap: () =>
                           AutoRouter.of(context).push(const SignUpView()),
                       child: Text(
-                        "Crea una nueva cuenta",
+                        "Crea una Cuenta",
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: const Color.fromRGBO(227, 2, 111, 1),
@@ -101,35 +112,7 @@ class LogInView extends StatelessWidget {
                       ),
                     )
                   ],
-                ),
-                Divider(
-                  height: 16,
-                  color: Colors.grey[200],
-                  thickness: 1,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "¿Olvidaste tu contraseña?",
-                      style: GoogleFonts.poppins(fontSize: 14),
-                    ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () => AutoRouter.of(context)
-                          .push(const RecoverPasswordView()),
-                      child: Text(
-                        "Recupera tu cuenta",
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: const Color.fromRGBO(227, 2, 111, 1),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                )
               ],
             ),
           ),

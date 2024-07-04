@@ -17,7 +17,7 @@ class AppRouter extends $AppRouter {
         CustomRoute(
           page: AuthRoute.page,
           path: "/auth",
-          transitionsBuilder: TransitionsBuilders.fadeIn,
+          transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
           children: [
             CustomRoute(
               page: LogInView.page,
@@ -27,6 +27,16 @@ class AppRouter extends $AppRouter {
             CustomRoute(
               page: SignUpView.page,
               path: "sign-up",
+              transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+            ),
+            CustomRoute(
+              page: RecoverPasswordView.page,
+              path: "recover-password",
+              transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+            ),
+            CustomRoute(
+              page: ChangePasswordView.page,
+              path: "change-password",
               transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
             ),
           ],
