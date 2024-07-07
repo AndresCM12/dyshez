@@ -1,6 +1,7 @@
 import 'package:dyshez_test/config/app_locator.dart';
 import 'package:dyshez_test/config/app_router.dart';
 import 'package:dyshez_test/modules/auth/cubits/auth/auth_cubit.dart';
+import 'package:dyshez_test/modules/orders/cubits/orders/orders_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -31,6 +32,9 @@ class MainApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => AuthCubit(),
+        ),
+        BlocProvider(
+          create: (context) => OrdersCubit(),
         ),
       ],
       child: MaterialApp.router(

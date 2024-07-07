@@ -1,6 +1,8 @@
 import 'package:dyshez_test/config/app_router.dart';
 import 'package:dyshez_test/data/providers/auth_provider.dart';
+import 'package:dyshez_test/data/providers/orders_provider.dart';
 import 'package:dyshez_test/data/repositories/auth_repository.dart';
+import 'package:dyshez_test/data/repositories/orders_repository.dart';
 import 'package:get_it/get_it.dart';
 
 class GetItLocator {
@@ -10,5 +12,7 @@ class GetItLocator {
     locator.registerSingleton<AppRouter>(AppRouter());
     locator.registerSingleton<AuthProvider>(AuthProvider());
     locator.registerSingleton<AuthRepository>(AuthRepository());
+    locator.registerSingleton<OrdersProvider>(OrdersProvider());
+    locator.registerSingleton<OrdersRepository>(OrdersRepository());
   }
 }

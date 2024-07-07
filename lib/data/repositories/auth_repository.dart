@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:dyshez_test/data/models/auth_reponse.dart';
+import 'package:dyshez_test/data/models/responses/auth_reponse.dart';
 import 'package:dyshez_test/data/providers/auth_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;

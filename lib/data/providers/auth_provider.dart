@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:dyshez_test/data/models/auth_reponse.dart' as app;
+import 'package:dyshez_test/data/models/responses/auth_reponse.dart' as app;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthProvider {

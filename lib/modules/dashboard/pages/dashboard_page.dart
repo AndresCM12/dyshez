@@ -22,19 +22,28 @@ class DashBoardPage extends StatelessWidget {
           bottomNavigationBar: NavigationBar(
             selectedIndex: tabsRouter.activeIndex,
             onDestinationSelected: tabsRouter.setActiveIndex,
+            backgroundColor: theme.colorScheme.onPrimaryContainer,
+            surfaceTintColor: theme.colorScheme.onPrimaryContainer,
+            overlayColor: MaterialStateProperty.all(
+              theme.colorScheme.onPrimaryContainer,
+            ),
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+            indicatorColor: theme.colorScheme.onPrimaryContainer,
             destinations: [
               NavigationDestination(
                 icon: Icon(Icons.home_outlined,
-                    color: theme.colorScheme.onPrimaryContainer),
+                    color:
+                        theme.colorScheme.onTertiaryContainer.withOpacity(0.5)),
                 selectedIcon: Icon(Icons.home_rounded,
-                    color: theme.colorScheme.onPrimaryContainer),
+                    color: theme.colorScheme.onTertiaryContainer),
                 label: 'Inicio',
               ),
               NavigationDestination(
                 icon: Icon(Icons.receipt_outlined,
-                    color: theme.colorScheme.onPrimaryContainer),
+                    color:
+                        theme.colorScheme.onTertiaryContainer.withOpacity(0.5)),
                 selectedIcon: Icon(Icons.receipt_rounded,
-                    color: theme.colorScheme.onPrimaryContainer),
+                    color: theme.colorScheme.onTertiaryContainer),
                 label: 'Órdenes',
               ),
             ],
