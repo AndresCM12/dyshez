@@ -9,6 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i11;
+import 'package:dyshez_test/data/models/order.dart' as _i13;
 import 'package:dyshez_test/modules/auth/auth_page.dart' as _i1;
 import 'package:dyshez_test/modules/auth/pages/change_password_view.dart'
     as _i2;
@@ -22,6 +23,7 @@ import 'package:dyshez_test/modules/dashboard/pages/home_view.dart' as _i5;
 import 'package:dyshez_test/modules/orders/pages/order_details_view.dart'
     as _i7;
 import 'package:dyshez_test/modules/orders/pages/orders_view.dart' as _i8;
+import 'package:flutter/material.dart' as _i12;
 
 abstract class $AppRouter extends _i11.RootStackRouter {
   $AppRouter({super.navigatorKey});
@@ -65,9 +67,13 @@ abstract class $AppRouter extends _i11.RootStackRouter {
       );
     },
     OrderDetailsView.name: (routeData) {
+      final args = routeData.argsAs<OrderDetailsViewArgs>();
       return _i11.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i7.OrderDetailsView(),
+        child: _i7.OrderDetailsView(
+          key: args.key,
+          currentOrder: args.currentOrder,
+        ),
       );
     },
     OrdersView.name: (routeData) {
@@ -177,16 +183,40 @@ class LogInView extends _i11.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i7.OrderDetailsView]
-class OrderDetailsView extends _i11.PageRouteInfo<void> {
-  const OrderDetailsView({List<_i11.PageRouteInfo>? children})
-      : super(
+class OrderDetailsView extends _i11.PageRouteInfo<OrderDetailsViewArgs> {
+  OrderDetailsView({
+    _i12.Key? key,
+    required _i13.Order currentOrder,
+    List<_i11.PageRouteInfo>? children,
+  }) : super(
           OrderDetailsView.name,
+          args: OrderDetailsViewArgs(
+            key: key,
+            currentOrder: currentOrder,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'OrderDetailsView';
 
-  static const _i11.PageInfo<void> page = _i11.PageInfo<void>(name);
+  static const _i11.PageInfo<OrderDetailsViewArgs> page =
+      _i11.PageInfo<OrderDetailsViewArgs>(name);
+}
+
+class OrderDetailsViewArgs {
+  const OrderDetailsViewArgs({
+    this.key,
+    required this.currentOrder,
+  });
+
+  final _i12.Key? key;
+
+  final _i13.Order currentOrder;
+
+  @override
+  String toString() {
+    return 'OrderDetailsViewArgs{key: $key, currentOrder: $currentOrder}';
+  }
 }
 
 /// generated route for

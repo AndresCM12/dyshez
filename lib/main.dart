@@ -5,6 +5,7 @@ import 'package:dyshez_test/modules/orders/cubits/orders/orders_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -43,7 +44,7 @@ class MainApp extends StatelessWidget {
             primary: Color.fromRGBO(227, 2, 111, 1),
           ),
         ),
-        routerConfig: AppRouter().config(),
+        routerConfig: GetIt.instance.get<AppRouter>().config(),
       ),
     );
   }

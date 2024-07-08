@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dyshez_test/data/enums/cubit_status.dart';
 import 'package:dyshez_test/data/models/order.dart';
 import 'package:dyshez_test/data/repositories/orders_repository.dart';
@@ -13,7 +11,6 @@ class OrdersCubit extends Cubit<OrdersState> {
   final locator = GetIt.instance;
 
   Future<void> getOrders() async {
-    log("Getting orders");
     emit(state.copyWith(state: CubitStatus.loading));
     final orders = await locator.get<OrdersRepository>().getOrders();
     if (orders.isNotEmpty) {

@@ -150,7 +150,8 @@ class OrdersView extends StatelessWidget {
 
   GestureDetector listItem(OrdersState state, int index, BuildContext context) {
     return GestureDetector(
-      onTap: () => AutoRouter.of(context).push(const OrderDetailsView()),
+      onTap: () => AutoRouter.of(context)
+          .push(OrderDetailsView(currentOrder: state.orders![index])),
       child: Container(
         padding: const EdgeInsets.only(bottom: 12, top: 12),
         child: Row(
@@ -179,7 +180,7 @@ class OrdersView extends StatelessWidget {
                 ),
                 Text(
                   state.orders![index].products.isNotEmpty
-                      ? '${state.orders![index].products.length} artículos - \$${state.orders![index].total.toStringAsFixed(2)}'
+                      ? '${state.orders![index].products.length} artículos · \$${(state.orders![index].total + state.orders![index].deliveryRate + state.orders![index].tip - state.orders![index].discount).toStringAsFixed(2)}'
                       : "\$0.00",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w400,
@@ -190,7 +191,7 @@ class OrdersView extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "${DateFormat("MMM dd").format(DateTime.parse(state.orders![index].createdAt!))} - ",
+                      "${DateFormat("MMM dd").format(DateTime.parse(state.orders![index].createdAt!))} · ",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,

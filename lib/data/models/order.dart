@@ -6,7 +6,7 @@ class Order {
   final int id;
   final String type;
   final String status;
-  final dynamic dicount;
+  final dynamic discount;
   final dynamic tip;
   final dynamic deliveryRate;
   final String address;
@@ -23,7 +23,7 @@ class Order {
     required this.id,
     required this.type,
     required this.status,
-    required this.dicount,
+    required this.discount,
     required this.tip,
     required this.deliveryRate,
     required this.address,
@@ -42,7 +42,7 @@ class Order {
       id: json['id'],
       type: json['type'],
       status: json['status'],
-      dicount: json['dicount'] ?? 0.0,
+      discount: json['discount'] ?? 0.0,
       tip: json['tip'] ?? 0.0,
       deliveryRate: json['delivery_rate'] ?? 0.0,
       address: json['address'] ?? '',
@@ -65,7 +65,7 @@ class Order {
     final total = order.products.fold(
         0.0,
         (previousValue, product) =>
-            previousValue + product.price - product.discount);
+            (previousValue + product.price - product.discount));
     order.total = total;
     return order;
   }
@@ -75,7 +75,7 @@ class Order {
       'id': id,
       'type': type,
       'status': status,
-      'dicount': dicount,
+      'discount': discount,
       'tip': tip,
       'delivery_rate': deliveryRate,
       'address': address,

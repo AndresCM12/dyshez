@@ -63,6 +63,6 @@ class AppRouter extends $AppRouter {
         CustomRoute(
             page: OrderDetailsView.page,
             path: "/orders-details",
-            transitionsBuilder: TransitionsBuilders.fadeIn),
+            transitionsBuilder: TransitionsBuilders.slideLeftWithFade),
       ];
 }
