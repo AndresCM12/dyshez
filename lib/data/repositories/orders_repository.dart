@@ -7,9 +7,17 @@ class OrdersRepository {
 
   OrdersRepository();
 
-  Future<List<Order>> getOrders() async {
+  Future<List<Order>> getOrders(
+    String filterByDate,
+    String filterByType,
+    String filterByStatus,
+  ) async {
     List<Order> orders = [];
-    final response = await locator.get<OrdersProvider>().getOrders();
+    final response = await locator.get<OrdersProvider>().getOrders(
+          filterByDate,
+          filterByType,
+          filterByStatus,
+        );
     Map<String, dynamic>? data = response.data;
     if (data != null) {
       orders = (data["orders"] as List<Map<String, dynamic>>)

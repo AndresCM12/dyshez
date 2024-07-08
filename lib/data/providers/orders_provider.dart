@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dyshez_test/data/models/responses/order_reponse.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -6,12 +8,37 @@ class OrdersProvider {
 
   OrdersProvider();
 
-  Future<OrderResponse> getOrders() async {
+  Future<OrderResponse> getOrders(
+    String filterByDate,
+    String filterByType,
+    String filterByStatus,
+  ) async {
     try {
       List<Map<String, dynamic>> response = [];
 
+      //We apply the filters to the orders
       List<Map<String, dynamic>> ordersResponse =
           await supabaseClient.from('orders').select("*");
+
+      if (filterByDate == "desc" && ordersResponse.isNotEmpty) {
+        ordersResponse
+            .sort((a, b) => a["created_at"].compareTo(b["created_at"]));
+      } else {
+        ordersResponse
+            .sort((a, b) => b["created_at"].compareTo(a["created_at"]));
+      }
+
+      if (filterByType != "all" && ordersResponse.isNotEmpty) {
+        ordersResponse = ordersResponse
+            .where((element) => element["type"] == filterByType)
+            .toList();
+      }
+
+      if (filterByStatus != "all" && ordersResponse.isNotEmpty) {
+        ordersResponse = ordersResponse
+            .where((element) => element["status"] == filterByStatus)
+            .toList();
+      }
 
       //Then we obtain the products of each products_id in the ordersResponse
       await Future.forEach(ordersResponse, (rawOrder) async {
@@ -52,6 +79,7 @@ class OrdersProvider {
 
       return OrderResponse.success({"orders": response});
     } catch (e) {
+      log("Error al obtener las ordenes: $e");
       return OrderResponse.error("Error al obtener las ordenes");
     }
   }

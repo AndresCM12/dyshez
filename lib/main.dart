@@ -40,6 +40,7 @@ class MainApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         theme: ThemeData.from(
+          useMaterial3: true,
           colorScheme: const ColorScheme.light(
             primary: Color.fromRGBO(227, 2, 111, 1),
           ),

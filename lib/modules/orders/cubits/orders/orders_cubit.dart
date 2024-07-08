@@ -12,11 +12,36 @@ class OrdersCubit extends Cubit<OrdersState> {
 
   Future<void> getOrders() async {
     emit(state.copyWith(state: CubitStatus.loading));
-    final orders = await locator.get<OrdersRepository>().getOrders();
+    final orders = await locator.get<OrdersRepository>().getOrders(
+          state.filterByDate,
+          state.filterByType,
+          state.filterByStatus,
+        );
     if (orders.isNotEmpty) {
       emit(state.copyWith(state: CubitStatus.loaded, orders: orders));
     } else {
-      emit(state.copyWith(state: CubitStatus.error));
+      emit(state.copyWith(state: CubitStatus.loaded, orders: []));
     }
+  }
+
+  void filterByDate(String? value) {
+    if (value == null) return;
+
+    emit(state.copyWith(filterByDate: value, state: CubitStatus.loading));
+    getOrders();
+  }
+
+  void filterByType(String? value) {
+    if (value == null) return;
+
+    emit(state.copyWith(filterByType: value, state: CubitStatus.loading));
+    getOrders();
+  }
+
+  void filterByStatus(String? value) {
+    if (value == null) return;
+
+    emit(state.copyWith(filterByStatus: value, state: CubitStatus.loading));
+    getOrders();
   }
 }

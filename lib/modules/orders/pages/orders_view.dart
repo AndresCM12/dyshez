@@ -4,6 +4,7 @@ import 'package:dyshez_test/data/enums/cubit_status.dart';
 import 'package:dyshez_test/modules/orders/cubits/orders/orders_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -13,36 +14,30 @@ class OrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<OrdersCubit, OrdersState>(
-        builder: (context, state) {
-          switch (state.state) {
-            case CubitStatus.initial:
-              context.read<OrdersCubit>().getOrders();
-              return loadingView();
+    return BlocBuilder<OrdersCubit, OrdersState>(
+      builder: (context, state) {
+        switch (state.state) {
+          case CubitStatus.initial:
+            context.read<OrdersCubit>().getOrders();
+            return loadingView();
 
-            case CubitStatus.loading:
-              return loadingView();
+          case CubitStatus.loading:
+            return loadingView();
 
-            case CubitStatus.loaded:
-              return successView();
+          case CubitStatus.loaded:
+            return successView(context);
 
-            case CubitStatus.error:
-              return const Center(
-                child: Text('Error al obtener las ordenes'),
-              );
+          case CubitStatus.error:
+            return errorView(context);
 
-            default:
-              return const Center(
-                child: Text('Error al obtener las ordenes'),
-              );
-          }
-        },
-      ),
+          default:
+            return errorView(context);
+        }
+      },
     );
   }
 
-  Widget successView() {
+  Widget successView(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -56,7 +51,7 @@ class OrdersView extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.menu),
-            onPressed: () {},
+            onPressed: () => showFiltersBottomModal(context),
           ),
         ],
       ),
@@ -83,15 +78,18 @@ class OrdersView extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        Divider(color: Colors.grey[300]),
-                    itemBuilder: (context, index) {
-                      return listItem(state, index, context);
-                    },
-                    itemCount: state.orders!.length,
-                  ),
-                ),
+                    child: state.orders != null && state.orders!.isNotEmpty
+                        ? ListView.separated(
+                            separatorBuilder: (context, index) =>
+                                Divider(color: Colors.grey[300]),
+                            itemBuilder: (context, index) {
+                              return listItem(state, index, context);
+                            },
+                            itemCount: state.orders!.length,
+                          )
+                        : const Center(
+                            child: Text('No hay ordenes'),
+                          )),
               ],
             ),
           );
@@ -100,11 +98,12 @@ class OrdersView extends StatelessWidget {
     );
   }
 
+  //Widgets
   Scaffold loadingView() {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Historial',
+          'Cargando',
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
           ),
@@ -124,21 +123,20 @@ class OrdersView extends StatelessWidget {
     );
   }
 
-  Scaffold errorView() {
+  Scaffold errorView(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Historial',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        elevation: 0,
+        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.grey[100],
+        title: Text('Historial',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
         centerTitle: true,
+        leading: Container(),
         actions: [
-          //add a burguer icon button
           IconButton(
             icon: const Icon(Icons.menu),
-            onPressed: () {},
+            onPressed: () => showFiltersBottomModal(context),
           ),
         ],
       ),
@@ -226,6 +224,211 @@ class OrdersView extends StatelessWidget {
     );
   }
 
+  void showFiltersBottomModal(BuildContext context) {
+    showBottomSheet(
+        context: context,
+        elevation: 16,
+        enableDrag: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+        ),
+        builder: (context) => SizedBox(
+              height: 0.55 * MediaQuery.of(context).size.height,
+              width: double.infinity,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 60,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: const BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(width: 60),
+                          Text(
+                            "Filtros",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Ordenar por",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          FormBuilderChoiceChip(
+                              name: "date",
+                              initialValue: context
+                                  .read<OrdersCubit>()
+                                  .state
+                                  .filterByDate,
+                              spacing: 16,
+                              selectedColor: Colors.red[100],
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              labelStyle: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.black),
+                              onChanged: (value) => context
+                                  .read<OrdersCubit>()
+                                  .filterByDate(value.toString()),
+                              decoration: const InputDecoration(
+                                labelText: "Fecha",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8),
+                                  ),
+                                ),
+                              ),
+                              options: const [
+                                FormBuilderChipOption(
+                                  value: "desc",
+                                  child: Text("Descendente"),
+                                ),
+                                FormBuilderChipOption(
+                                  value: "asc",
+                                  child: Text("Ascendente"),
+                                ),
+                              ]),
+                          const SizedBox(height: 16),
+                          FormBuilderChoiceChip(
+                              name: "type",
+                              initialValue: context
+                                  .read<OrdersCubit>()
+                                  .state
+                                  .filterByType,
+                              spacing: 16,
+                              selectedColor: Colors.red[100],
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              labelStyle: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.black),
+                              onChanged: (value) => context
+                                  .read<OrdersCubit>()
+                                  .filterByType(value.toString()),
+                              decoration: const InputDecoration(
+                                labelText: "Tipo",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8),
+                                  ),
+                                ),
+                              ),
+                              options: const [
+                                FormBuilderChipOption(
+                                  value: "all",
+                                  child: Text("Todos"),
+                                ),
+                                FormBuilderChipOption(
+                                  value: "direct",
+                                  child: Text("Dyshez Direct"),
+                                ),
+                                FormBuilderChipOption(
+                                  value: "promo_live",
+                                  child: Text("Promo Live"),
+                                ),
+                              ]),
+                          const SizedBox(height: 16),
+                          FormBuilderChoiceChip(
+                              name: "status",
+                              initialValue: context
+                                  .read<OrdersCubit>()
+                                  .state
+                                  .filterByStatus,
+                              spacing: 16,
+                              selectedColor: Colors.red[100],
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              labelStyle: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.black),
+                              onChanged: (value) => context
+                                  .read<OrdersCubit>()
+                                  .filterByStatus(value.toString()),
+                              decoration: const InputDecoration(
+                                labelText: "Estado",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8),
+                                  ),
+                                ),
+                              ),
+                              options: const [
+                                FormBuilderChipOption(
+                                  value: "all",
+                                  child: Text("Todos"),
+                                ),
+                                FormBuilderChipOption(
+                                  value: "presented",
+                                  child: Text("Presentado"),
+                                ),
+                                FormBuilderChipOption(
+                                  value: "fulfilled",
+                                  child: Text("Completado"),
+                                ),
+                                FormBuilderChipOption(
+                                  value: "no_presented",
+                                  child: Text("No presentado"),
+                                ),
+                              ]),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ));
+  }
+
+  //Helpers
   Text getOrderStatus(String status) {
     switch (status) {
       case "presented":
