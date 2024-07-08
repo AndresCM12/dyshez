@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:dyshez_test/data/models/order.dart';
 import 'package:flutter/material.dart';
@@ -118,7 +116,6 @@ class OrderDetailsView extends StatelessWidget {
   }
 
   Column directBody(Order order) {
-    log(order.discount.toString());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -127,12 +124,18 @@ class OrderDetailsView extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(e.name),
+                        Text(e.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.poppins()),
                         const Spacer(),
                         if (e.discount > 0)
                           Text("\$${e.discount.toStringAsFixed(2)}",
-                              style: const TextStyle(
-                                  decoration: TextDecoration.lineThrough)),
+                              style: GoogleFonts.poppins(
+                                decoration: TextDecoration.lineThrough,
+                                color: Colors.grey[500],
+                              )),
+                        const SizedBox(width: 8),
                         Text(
                           "\$${e.price.toStringAsFixed(2)}",
                           style: GoogleFonts.poppins(

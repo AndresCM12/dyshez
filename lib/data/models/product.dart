@@ -18,8 +18,14 @@ class Product {
       id: json['id'],
       status: json['status'],
       name: json['name'],
-      price: json['price'],
-      discount: json['discount'] ?? 0.0,
+      price: json['price'].runtimeType == int
+          ? json['price'].toDouble()
+          : json['price'],
+      discount: json['discount'] != null
+          ? json['discount'].runtimeType == int
+              ? json['discount'].toDouble()
+              : json['discount']
+          : 0.0,
     );
   }
 

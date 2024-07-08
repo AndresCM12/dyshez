@@ -38,7 +38,7 @@ class OrdersProvider {
 
           if (productResponse.isEmpty) return;
           products.add(
-            productResponse[0],
+            productResponse.firstWhere((element) => element["id"] == productId),
           );
         });
 
